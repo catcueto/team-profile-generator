@@ -8,9 +8,10 @@ const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
-const { generate } = require("rxjs");
-
+const { cachedDataVersionTag } = require("v8");
 const team = []; //empty array so we can later add team members
+
+// ADDING MANAGER + INPUT VALUES
 function addManager() {
   inquirer
     .prompt([
@@ -65,6 +66,7 @@ function addManager() {
     });
 }
 
+// PROMPTS THE USER WITH TEAM ROLES
 function nextTeamMember() {
   inquirer
     .prompt([
@@ -92,6 +94,119 @@ function nextTeamMember() {
     });
 }
 
+// ADDING ENGINEER EMPLOYEE
+function addEngineer() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is your engineer's name?",
+        name: "name",
+        default: "Amy",
+      },
+      {
+        type: "input",
+        message: "What is your engineer's id?",
+        name: "id",
+        default: "7",
+        validate: (input) => {
+          if (isNaN(input)) {
+            return "Please include only numeric values.";
+          }
+          return true;
+        },
+      },
+      {
+        type: "input",
+        message: "What is your engineer's email?",
+        name: "emailAddress",
+        default: "amyagu@gmail.com",
+      },
+      {
+        type: "input",
+        message: "What is your engineer's GitHub username?",
+        name: "gitHub",
+        default: "amyagu",
+      },
+    ])
+    .then((response) => {
+      const engineer = new Engineer(
+        response.name,
+        response.id,
+        response.emailAddress,
+        response.gitHub
+      );
+      team.push(engineer);
+      nextTeamMember();
+    });
+}
+
+// ADDING AN INTERN EMPLOYEE
+function addIntern() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is your intern's name?",
+        name: "name",
+        default: "Kelly",
+      },
+      {
+        type: "input",
+        message: "What is your intern's id?",
+        name: "id",
+        default: "10",
+        validate: (input) => {
+          if (isNaN(input)) {
+            return "Please include only numeric values.";
+          }
+          return true;
+        },
+      },
+      {
+        type: "input",
+        message: "What is your intern's email?",
+        name: "emailAddress",
+        default: "kellyg@gmail.com",
+      },
+      {
+        type: "input",
+        message: "What is your intern's GitHub username?",
+        name: "gitHub",
+        default: "kellyg",
+      },
+    ])
+    .then((response) => {
+      const engineer = new Engineer(
+        response.name,
+        response.id,
+        response.emailAddress,
+        response.gitHub
+      );
+      team.push(engineer);
+      nextTeamMember();
+    });
+}
+
+function importCard(role) {
+  // role comes from nextTeamMember ();
+  switch (role.getRole()) {
+    case "Engineer":
+      return; //ADD CARD STYLE
+    case "Intern":
+      return; //ADD CARD STYLE
+  }
+}
+
+function createInfoCard() {
+  let cards = " ";
+  for (var i = 0; i < team.length; i++) {
+    cards += importCard(team[i]);
+  }
+  console.log(cards);
+  return cards.replace("undefined", "");
+}
+
 const buildTeam = function () {
   const newHTML = generateHTML(team[0]);
   fs.watch("./dist/index.html", newHTML, (error) =>
@@ -101,4 +216,9 @@ const buildTeam = function () {
   );
 };
 
-function addManager();
+function createHTML(manager) {
+  return `<!DOCTYPE html>`
+  <html lang = 'en'>
+}
+
+addManager();
