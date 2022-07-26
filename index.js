@@ -108,7 +108,7 @@ function addEngineer() {
         type: "input",
         message: "What is your engineer's id?",
         name: "id",
-        default: "7",
+        default: "11",
         validate: (input) => {
           if (isNaN(input)) {
             return "Please include only numeric values.";
@@ -142,7 +142,7 @@ function addEngineer() {
 }
 
 // ADDING AN INTERN EMPLOYEE
-function addIntern() {
+function addEngineer() {
   inquirer
     .prompt([
       {
@@ -155,7 +155,7 @@ function addIntern() {
         type: "input",
         message: "What is your intern's id?",
         name: "id",
-        default: "10",
+        default: "27",
         validate: (input) => {
           if (isNaN(input)) {
             return "Please include only numeric values.";
@@ -187,6 +187,99 @@ function addIntern() {
       nextTeamMember();
     });
 }
+
+function addIntern() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is your intern's name?",
+        name: "name",
+        default: "Victoria",
+      },
+      {
+        type: "input",
+        message: "What is your intern's id?",
+        name: "id",
+        default: "45",
+        validate: (input) => {
+          if (isNaN(input)) {
+            return "Please include only numeric values.";
+          }
+          return true;
+        },
+      },
+      {
+        type: "input",
+        message: "What is your intern's email?",
+        name: "emailAddress",
+        default: "vdias@gmail.com",
+      },
+      {
+        type: "input",
+        message: "What is your intern's GitHub username?",
+        name: "gitHub",
+        default: "vdias",
+      },
+    ])
+    .then((response) => {
+      const engineer = new Engineer(
+        response.name,
+        response.id,
+        response.emailAddress,
+        response.gitHub
+      );
+      team.push(engineer);
+      nextTeamMember();
+    });
+}
+
+function addIntern() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is your intern's name?",
+        name: "name",
+        default: "Celina",
+      },
+      {
+        type: "input",
+        message: "What is your intern's id?",
+        name: "id",
+        default: "59",
+        validate: (input) => {
+          if (isNaN(input)) {
+            return "Please include only numeric values.";
+          }
+          return true;
+        },
+      },
+      {
+        type: "input",
+        message: "What is your intern's email?",
+        name: "emailAddress",
+        default: "cfig@yahoo.com",
+      },
+      {
+        type: "input",
+        message: "What is your intern's GitHub username?",
+        name: "gitHub",
+        default: "cfig",
+      },
+    ])
+    .then((response) => {
+      const engineer = new Engineer(
+        response.name,
+        response.id,
+        response.emailAddress,
+        response.gitHub
+      );
+      team.push(engineer);
+      nextTeamMember();
+    });
+}
+
 
 function importCard(role) {
   // role comes from nextTeamMember ();
