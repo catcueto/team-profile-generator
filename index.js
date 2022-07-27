@@ -81,11 +81,14 @@ function nextTeamMember() {
       },
     ])
     .then((answer) => {
+      // If user wants to add an Engineer to its team
       if (answer.role === "Engineer") {
         addEngineer();
+        // If user wants to add an Intern to its team
       } else if (answer.role === "Intern") {
         addIntern();
       } else {
+        // If finished
         console.log("Team is coming together!");
         console.log(team);
         buildTeam();
@@ -140,19 +143,19 @@ function addEngineer() {
     });
 }
 
-// ADDING AN INTERN EMPLOYEE
+// ADDING AN ENGINEER EMPLOYEE
 function addEngineer() {
   inquirer
     .prompt([
       {
         type: "input",
-        message: "What is your intern's name?",
+        message: "What is your engineer's name?",
         name: "name",
         default: "Kelly",
       },
       {
         type: "input",
-        message: "What is your intern's id?",
+        message: "What is your engineer's id?",
         name: "id",
         default: "27",
         validate: (input) => {
@@ -164,13 +167,13 @@ function addEngineer() {
       },
       {
         type: "input",
-        message: "What is your intern's email?",
+        message: "What is your engineer's email?",
         name: "emailAddress",
         default: "kellyg@gmail.com",
       },
       {
         type: "input",
-        message: "What is your intern's GitHub username?",
+        message: "What is your engineer's GitHub username?",
         name: "gitHub",
         default: "kellyg",
       },
@@ -187,6 +190,7 @@ function addEngineer() {
     });
 }
 
+// ADDING TWO INTERNS
 function addIntern() {
   inquirer
     .prompt([
@@ -216,19 +220,19 @@ function addIntern() {
       },
       {
         type: "input",
-        message: "What is your intern's GitHub username?",
-        name: "gitHub",
-        default: "vdias",
+        message: "What school is your intern's attending?",
+        name: "school",
+        default: "George Mason University",
       },
     ])
     .then((response) => {
-      const engineer = new Engineer(
+      const intern = new Intern(
         response.name,
         response.id,
         response.emailAddress,
-        response.gitHub
+        response.school
       );
-      team.push(engineer);
+      team.push(intern);
       nextTeamMember();
     });
 }
@@ -262,19 +266,19 @@ function addIntern() {
       },
       {
         type: "input",
-        message: "What is your intern's GitHub username?",
-        name: "gitHub",
-        default: "cfig",
+        message: "What school is your intern's attending?",
+        name: "school",
+        default: "University of Maryland",
       },
     ])
     .then((response) => {
-      const engineer = new Engineer(
+      const intern = new Intern(
         response.name,
         response.id,
         response.emailAddress,
-        response.gitHub
+        response.school
       );
-      team.push(engineer);
+      team.push(intern);
       nextTeamMember();
     });
 }
