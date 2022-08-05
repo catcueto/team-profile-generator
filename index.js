@@ -1,5 +1,3 @@
-"use strict";
-
 const inquirer = require("inquirer");
 const fs = require("fs");
 
@@ -293,15 +291,26 @@ function importCard(role) {
   }
 }
 
-function createInfoCard() {
-  let cards = " ";
-  for (let i = 0; i < team.length; i++) {
-    cards += importCard(team[i]);
+function createEmplCards() {
+  switch (employee.getRole()){
+    case "Intern":
+      return `
+      <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
+      <div class="card-header">
+        <h5 class="member-name">Catalina</h5>
+        <ion-icon name="cafe-outline" class="icon"></ion-icon>
+        <div class="card-text m-2 role-names">{employee.name}
+        <li class="list-group-item">ID: 7</li>
+        <li class="list-group-item">
+          Email: <a href="mailto:ccueto@gmail.com">ccueto@gmail.com</a>
+        </li>
+        <li class="list-group-item">Office number: 1</li>
+      </ul>
+    </div>
+      `
   }
-  console.log(cards);
-  return cards.replace("undefined", "");
+
 }
-function createHTML(manager) {
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -351,7 +360,7 @@ function createHTML(manager) {
 }
 
 const buildTeam = function () {
-  const newHTML = generateHTML(team[0]);
+  const newHTML = createHTML(team[0]);
   fs.watch("./dist/index.html", newHTML, (error) =>
     error
       ? console.error(error)
