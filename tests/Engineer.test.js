@@ -9,7 +9,7 @@ describe("Engineer", () => {
         "brookerus@aol.com",
         "brookiebookie"
       );
-      expect(obj.giHhub).toEqual("brookiebookie");
+      expect(obj.gitHhub).toEqual("brookiebookie");
     });
   });
 

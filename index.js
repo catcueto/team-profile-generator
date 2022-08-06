@@ -1,5 +1,6 @@
-const inquirer = require("inquirer");
 const fs = require("fs");
+const path = require('path');
+const inquirer = require("inquirer");
 
 // lib for classes
 const Employee = require("./lib/Employee");
@@ -14,9 +15,8 @@ function addManager() {
     .prompt([
       {
         type: "input",
-        message: "What is the team manager's name?",
+        message: "Hiya! Please enter the name of the manager:",
         name: "name",
-        default: "Catalina",
       },
       {
         type: "input",
@@ -35,13 +35,11 @@ function addManager() {
         type: "input",
         message: "What is the team manager's email?",
         name: "emailAddress",
-        default: "ccueto@gmail.com",
       },
       {
         type: "input",
         message: "What is the team manager's office number?",
         name: "officeNumber",
-        default: "1",
         validate: (input) => {
           if (isNaN(input)) {
             return "Please include only numeric values.";
@@ -58,13 +56,14 @@ function addManager() {
         response.emailAddress,
         response.officeNumber
       );
-      team.push(manager);
-      nextTeamMember();
+      // sending manager to the beginning of the team array (initially empty)
+      team.unshift(manager);
+      addEmployee();
     });
 }
 
 // PROMPTS THE USER WITH TEAM ROLES
-function nextTeamMember() {
+function addEmployee() {
   inquirer
     .prompt([
       {
@@ -74,212 +73,65 @@ function nextTeamMember() {
         choices: [
           "Engineer",
           "Intern",
-          "I don't want to add any more team members",
+          "No additional employees. My team is complete",
         ],
       },
-    ])
-    .then((answer) => {
-      // If user wants to add an Engineer to its team
-      if (answer.role === "Engineer") {
-        addEngineer();
-        // If user wants to add an Intern to its team
-      } else if (answer.role === "Intern") {
-        addIntern();
-      } else {
-        // If finished
+      {
+        type: "input",
+        name: "name",
+        message: "What is the employee's name?",
+        // when method checks for previous input; will run if user choses to add another employee
+        when: (role) => role.addAnother !== "No additional employees. My team is complete"
+      },
+
+      {
+        type: "input",
+        name: "id",
+        message: "What's the employee ID number?",
+        when: (role) => role.addAnother !== "No additional employees. My team is complete"
+      },
+      {
+        type: "input",
+        name: "emailAddress",
+        message: "Please enter the email address for this employee:",
+        when: (role) => role.addAnother !== "No additional employees. My team is complete"
+      },
+      {
+        type: "input",
+        name: "school",
+        message: "What school is your intern's attending?",
+        // this will only run when user is adding an intern
+        when: (role) => role.addAnother === "Add Intern"
+      },
+      {
+        type: "input",
+        name: "gitHub",
+        message: "What is your engineer's GitHub username?",
+        // this will only run when user is adding an engineer
+        when: (role) => role.addAnother === "Add Engineer"
+      }
+    ]).then(employeeDeets => {
+      // if the user wants to add an Intern to its team
+      if (employeeDeets.addAnother === "Add Intern") {
+        const intern = new Intern(employeeDeets.name, employeeDeets.id, employeeDeets.emailAddress, employeeDeets.school);
+        // adding intern info to the end of the array
+        team.push(intern);
+        addEmployee();
+      }
+      // if the user wants to add an Engineer to its team
+      else if (employeeDeets.addAnother === 'Add Engineer') {
+        const engineer = new Engineer(employeeDeets.name, employeeDeets.id, employeeDeets.emailAddress, employeeDeets.gitHub);
+        team.push(engineer);
+        addEmployee();
+      }
+      // when the user is done adding employees, run the generateHTMl()
+      else {
         console.log("Team is coming together!");
-        console.log(team);
-        buildTeam();
+        generateHTML();
       }
     });
 }
 
-// ADDING ENGINEER EMPLOYEE
-function addEngineer() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is your engineer's name?",
-        name: "name",
-        default: "Amy",
-      },
-      {
-        type: "input",
-        message: "What is your engineer's id?",
-        name: "id",
-        default: "11",
-        validate: (input) => {
-          if (isNaN(input)) {
-            return "Please include only numeric values.";
-          }
-          return true;
-        },
-      },
-      {
-        type: "input",
-        message: "What is your engineer's email?",
-        name: "emailAddress",
-        default: "amyagu@gmail.com",
-      },
-      {
-        type: "input",
-        message: "What is your engineer's GitHub username?",
-        name: "gitHub",
-        default: "amyagu",
-      },
-    ])
-    .then((response) => {
-      const engineer = new Engineer(
-        response.name,
-        response.id,
-        response.emailAddress,
-        response.gitHub
-      );
-      team.push(engineer);
-      nextTeamMember();
-    });
-}
-
-// ADDING AN ENGINEER EMPLOYEE
-function addEngineer() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is your engineer's name?",
-        name: "name",
-        default: "Kelly",
-      },
-      {
-        type: "input",
-        message: "What is your engineer's id?",
-        name: "id",
-        default: "27",
-        validate: (input) => {
-          if (isNaN(input)) {
-            return "Please include only numeric values.";
-          }
-          return true;
-        },
-      },
-      {
-        type: "input",
-        message: "What is your engineer's email?",
-        name: "emailAddress",
-        default: "kellyg@gmail.com",
-      },
-      {
-        type: "input",
-        message: "What is your engineer's GitHub username?",
-        name: "gitHub",
-        default: "kellyg",
-      },
-    ])
-    .then((response) => {
-      const engineer = new Engineer(
-        response.name,
-        response.id,
-        response.emailAddress,
-        response.gitHub
-      );
-      team.push(engineer);
-      nextTeamMember();
-    });
-}
-
-// ADDING TWO INTERNS
-function addIntern() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is your intern's name?",
-        name: "name",
-        default: "Victoria",
-      },
-      {
-        type: "input",
-        message: "What is your intern's id?",
-        name: "id",
-        default: "45",
-        validate: (input) => {
-          if (isNaN(input)) {
-            return "Please include only numeric values.";
-          }
-          return true;
-        },
-      },
-      {
-        type: "input",
-        message: "What is your intern's email?",
-        name: "emailAddress",
-        default: "vdias@gmail.com",
-      },
-      {
-        type: "input",
-        message: "What school is your intern's attending?",
-        name: "school",
-        default: "George Mason University",
-      },
-    ])
-    .then((response) => {
-      const intern = new Intern(
-        response.name,
-        response.id,
-        response.emailAddress,
-        response.school
-      );
-      team.push(intern);
-      nextTeamMember();
-    });
-}
-
-function addIntern() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is your intern's name?",
-        name: "name",
-        default: "Celina",
-      },
-      {
-        type: "input",
-        message: "What is your intern's id?",
-        name: "id",
-        default: "59",
-        validate: (input) => {
-          if (isNaN(input)) {
-            return "Please include only numeric values.";
-          }
-          return true;
-        },
-      },
-      {
-        type: "input",
-        message: "What is your intern's email?",
-        name: "emailAddress",
-        default: "cfig@yahoo.com",
-      },
-      {
-        type: "input",
-        message: "What school is your intern's attending?",
-        name: "school",
-        default: "University of Maryland",
-      },
-    ])
-    .then((response) => {
-      const intern = new Intern(
-        response.name,
-        response.id,
-        response.emailAddress,
-        response.school
-      );
-      team.push(intern);
-      nextTeamMember();
-    });
-}
 
 function importCard(role) {
   // role comes from nextTeamMember ();
@@ -291,27 +143,62 @@ function importCard(role) {
   }
 }
 
-function createEmplCards() {
-  switch (employee.getRole()){
+// function to check if any employee cards need to be creates, and if so, passes the employee from the employeesArray to the createEmployeeCard function, which will create the html for the card, and then that text is returned and added to the overall text for return to the createInfoCards function
+
+// CHECK
+function checkForEmployees() {
+  if (employeesArray.length > 1) {
+    // creates the employeeCards variable which will hold the collective text of all employee info cards
+    let employeeCards = createEmployeeCard(employeesArray[1]);
+    for (let i = 2; i < employeesArray.length; i++) {
+      employeeCards += createEmployeeCard(employeesArray[i]);
+    }
+    return employeeCards;
+  } else {
+    return '';
+  }
+}
+
+
+// GENERATING EMPLOYEE CARDS 
+function createEmplCard(employee) {
+  switch (employee.getRole()) {
     case "Intern":
       return `
       <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
       <div class="card-header">
-        <h5 class="member-name">Catalina</h5>
+        <h5 class="member-name">${employee.name}</h5>
         <ion-icon name="cafe-outline" class="icon"></ion-icon>
-        <div class="card-text m-2 role-names">{employee.name}
-        <li class="list-group-item">ID: 7</li>
+        <div class="card-text m-2 role-names">Intern
+        <li class="list-group-item">${employee.id}</li>
         <li class="list-group-item">
-          Email: <a href="mailto:ccueto@gmail.com">ccueto@gmail.com</a>
+          Email: <a href="mailto:${employee.emailAddress}> ${employee.emailAddress}</a>
         </li>
-        <li class="list-group-item">Office number: 1</li>
+        <li class="list-group-item">School: ${employee.school}</li>
       </ul>
-    </div>
-      `
-  }
+    </div>`;
 
-}
-  return `<!DOCTYPE html>
+    case "Engineer":
+      return `
+    <div class="card text-bg-info mb-3 card-unit" style="max-width: 18rem">
+    <div class="card-header">
+      <h5 class="member-name">${employee.name}</h5>
+      <ion-icon name="glasses-outline" class="icon"></ion-icon>
+      <div class="card-text m-2 role-names">Engineer</div>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">${employee.id}</li>
+      <li class="list-group-item">
+      Email: <a href="mailto:${employee.emailAddress}> ${employee.emailAddress}</a>
+    </li>
+      <li class="list-group-item">
+        GitHub: <a href="https://github.com/${employee.gitHub}">${employee.gitHub}</a>
+      </li>
+    </ul>
+  </div>`;
+
+
+      return `<!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -345,9 +232,8 @@ function createEmplCards() {
         <ul class="list-group list-group-flush">
         <li class="list-group-item">ID: ${manager.id}</li>
         <li class="list-group-item">
-          Email: <a href="mailto:${manager.emailAddress}">${
-    manager.emailAddress
-  }</a>
+          Email: <a href="mailto:${manager.emailAddress}">${manager.emailAddress
+        }</a>
         </li>
         <li class="list-group-item">Office number: ${manager.officeNumber}</li>
       </ul>
@@ -357,14 +243,14 @@ function createEmplCards() {
       </div>
   </body>
   </html>`;
-}
+  }
 
-const buildTeam = function () {
-  const newHTML = createHTML(team[0]);
-  fs.watch("./dist/index.html", newHTML, (error) =>
-    error
-      ? console.error(error)
-      : console.log("Creating HTML file in dist folder")
-  );
-};
-addManager();
+  const buildTeam = function () {
+    const newHTML = createHTML(team[0]);
+    fs.watch("./dist/index.html", newHTML, (error) =>
+      error
+        ? console.error(error)
+        : console.log("Creating HTML file in dist folder")
+    );
+  };
+  addManager();
