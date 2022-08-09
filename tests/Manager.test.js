@@ -1,19 +1,51 @@
 const Manager = require("../lib/manager");
 
+// testing Manager class
 describe("Manager", () => {
   describe("Manager Properties", () => {
-    it("This should return Manager object: name, id, emailAddress, and officeNumber", () => {
-      const obj = new Manager("Catalina", 7, "ccueto@gmail.com", 1);
-      expect(obj.name).toEqual("Catalina");
-      expect(obj.id).toEqual(7);
-      expect(obj.emailAddress).toEqual("ccueto@gmail.com");
-      expect(obj.officeNumber).toEqual(1);
+    it("This should create a manager object with: 'name', 'id', 'email, and 'officeNumber'", () => {
+      const manager = new Manager("Solange", 8, "example@gmail.com", 105);
+      expect(manager).toEqual({
+        name: "Solange",
+        id: 8,
+        email: "example@gmail.com",
+        officeNumber: 105,
+      });
     });
   });
-  describe("Manager Method", () => {
-    it("This should return the role method", () => {
-      const roleMethod = new Manager("Catalina", 7, "ccueto@gmail.com", 1);
-      expect(roleMethod.getRole()).toEqual("Manager");
+
+  describe("getName", () => {
+    it("This should return manager's name", () => {
+      const manager = new Manager("Solange", 8, "example@email.com", 105);
+      expect(manager.getName()).toEqual("Solange");
+    });
+  });
+
+  describe("getID", () => {
+    it("This should return manager's id", () => {
+      const manager = new Manager("Solange", 8, "example@email.com", 105);
+      expect(manager.getID()).toEqual(8);
+    });
+  });
+
+  describe("getEmail", () => {
+    it("This should return manager's email", () => {
+      const manager = new Manager("Solange", 8, "example@email.com", 105);
+      expect(manager.getEmail()).toEqual("example@email.com");
+    });
+  });
+
+  describe("getOfficeNumber", () => {
+    it("This should return manager's office number", () => {
+      const manager = new Manager("Solange", 8, "example@email.com", 10);
+      expect(manager.getOfficeNumber()).toEqual(105);
+    });
+  });
+
+  describe("getRole", () => {
+    it("This should return manager's role", () => {
+      const manager = new Manager("Solange", 8, "example@email.com", 105);
+      expect(manager.getRole()).toEqual("Manager");
     });
   });
 });

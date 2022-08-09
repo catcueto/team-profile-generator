@@ -2,7 +2,7 @@ const Engineer = require("../lib/Engineer");
 
 // testing Engineer class
 describe("Engineer", () => {
-  describe("Employee Properties", () => {
+  describe("Engineer Properties", () => {
     it("This should create an engineer object with: 'name', 'id', 'email, and 'gitHub'", () => {
       const engineer = new Engineer(
         "Solange",
@@ -20,7 +20,7 @@ describe("Engineer", () => {
   });
 
   describe("getName", () => {
-    it("This should return employee's name", () => {
+    it("This should return engineer's name", () => {
       const engineer = new Engineer(
         "Solange",
         8,
@@ -32,7 +32,7 @@ describe("Engineer", () => {
   });
 
   describe("getID", () => {
-    it("This should return Engineer's id", () => {
+    it("This should return engineer's id", () => {
       const engineer = new Engineer(
         "Solange",
         8,
@@ -44,7 +44,7 @@ describe("Engineer", () => {
   });
 
   describe("getEmail", () => {
-    it("This should return employee's email", () => {
+    it("This should return engineer's email", () => {
       const engineer = new Engineer(
         "Solange",
         8,
@@ -56,7 +56,7 @@ describe("Engineer", () => {
   });
 
   describe("getGitHub", () => {
-    it("This should return employee's email", () => {
+    it("This should return engineer's gitHub", () => {
       const engineer = new Engineer(
         "Solange",
         8,
@@ -68,8 +68,13 @@ describe("Engineer", () => {
   });
 
   describe("getRole", () => {
-    it("This should return employee's role", () => {
-      const engineer = new Engineer("Solange", 8, "example@email.com");
+    it("This should return engineer's role", () => {
+      const engineer = new Engineer(
+        "Solange",
+        8,
+        "example@email.com",
+        "sollymolly"
+      );
       expect(engineer.getRole()).toEqual("Engineer");
     });
   });
