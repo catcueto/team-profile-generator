@@ -3,7 +3,7 @@ const Employee = require("../lib/Employee");
 // testing Employee class
 describe("Employee", () => {
   describe("Employee Properties", () => {
-    it("This should create an employee object with: 'name', 'id', and 'email'", () => {
+    it('This should create an employee object with: "name", "id, and "email"', () => {
       const employee = new Employee("Solange", 8, "example@gmail.com");
       expect(employee).toEqual({
         name: "Solange",
