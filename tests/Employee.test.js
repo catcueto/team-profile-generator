@@ -1,22 +1,43 @@
 const Employee = require("../lib/Employee");
 
+// testing Employee class
 describe("Employee", () => {
   describe("Employee Properties", () => {
-    it("This should return Employee object: name, id, and email", () => {
-      const obj = new Employee("Steve", 13, "stevegreen@gmail.com");
-      expect(obj.name).toEqual("Steve");
-      expect(obj.id).toEqual(13);
-      expect(obj.emailAddress).toEqual("stevegreen@gmail.com");
+    it("This should create an employee object with: 'name', 'id', and 'email'", () => {
+      const employee = new Employee("Solange", 8, "example@gmail.com");
+      expect(employee).toEqual({
+        name: "Solange",
+        id: 8,
+        email: "example@gmail.com",
+      });
     });
   });
 
-  describe("Employee Methods", () => {
-    it("Testing for the return of Employee object: name, id, and emailAddress and employee role", () => {
-      const roleMethod = new Employee("Jessica", 18, "Teagrin@gmail.com");
-      expect(roleMethod.getName()).toEqual("Jessica");
-      expect(roleMethod.getId()).toEqual(18);
-      expect(roleMethod.getEmail()).toEqual("Teagrin@gmail.com");
-      expect(roleMethod.getRole()).toEqual("Employee");
+  describe("emplName", () => {
+    it("This should return employee's name", () => {
+      const employee = new Employee("Solange", 8, "example@email.com");
+      expect(employee.emplName()).toEqual("Solange");
+    });
+  });
+
+  describe("emplID", () => {
+    it("This should return employee's id", () => {
+      const employee = new Employee("Solange", 8, "example@email.com");
+      expect(employee.emplID()).toEqual(8);
+    });
+  });
+
+  describe("emplEmail", () => {
+    it("This should return employee's email", () => {
+      const employee = new Employee("Solange", 8, "example@email.com");
+      expect(employee.emplEmail()).toEqual("example@email.com");
+    });
+  });
+
+  describe("employeeRole", () => {
+    it("This should return employee's role", () => {
+      const employee = new Employee("Solange", 8, "example@email.com");
+      expect(employee.getRole()).toEqual("Employee");
     });
   });
 });

@@ -3,13 +3,12 @@ const path = require('path');
 const inquirer = require("inquirer");
 
 // lib for classes
-const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 const team = []; //empty array so we can later add team members
 
-// ADDING MANAGER + INPUT VALUES
+// TODO: ADDING MANAGER + INPUT VALUES
 function addManager() {
   inquirer
     .prompt([
@@ -34,7 +33,7 @@ function addManager() {
       {
         type: "input",
         message: "What is the team manager's email?",
-        name: "emailAddress",
+        name: "email,
       },
       {
         type: "input",
@@ -53,7 +52,7 @@ function addManager() {
       const manager = new Manager(
         response.name,
         response.id,
-        response.emailAddress,
+        response.email,
         response.officeNumber
       );
       // sending manager to the beginning of the team array (initially empty)
@@ -62,7 +61,7 @@ function addManager() {
     });
 }
 
-// PROMPTS THE USER WITH TEAM ROLES
+// TODO: PROMPT THE USER WITH TEAM ROLES
 function addEmployee() {
   inquirer
     .prompt([
@@ -92,7 +91,7 @@ function addEmployee() {
       },
       {
         type: "input",
-        name: "emailAddress",
+        name: "email",
         message: "Please enter the email address for this employee:",
         when: (role) => role.addAnother !== "No additional employees. My team is complete"
       },
@@ -113,54 +112,26 @@ function addEmployee() {
     ]).then(employeeDeets => {
       // if the user wants to add an Intern to its team
       if (employeeDeets.addAnother === "Add Intern") {
-        const intern = new Intern(employeeDeets.name, employeeDeets.id, employeeDeets.emailAddress, employeeDeets.school);
+        const intern = new Intern(employeeDeets.name, employeeDeets.id, employeeDeets.email, employeeDeets.school);
         // adding intern info to the end of the array
         team.push(intern);
         addEmployee();
       }
       // if the user wants to add an Engineer to its team
-      else if (employeeDeets.addAnother === 'Add Engineer') {
-        const engineer = new Engineer(employeeDeets.name, employeeDeets.id, employeeDeets.emailAddress, employeeDeets.gitHub);
+      else if (employeeDeets.addAnother === "Add Engineer") {
+        const engineer = new Engineer(employeeDeets.name, employeeDeets.id, employeeDeets.email, employeeDeets.gitHub);
         team.push(engineer);
         addEmployee();
       }
-      // when the user is done adding employees, run the generateHTMl()
+      // when the user is done adding employees, run the writeHTMl()
       else {
-        console.log("Team is coming together!");
-        generateHTML();
+        // console.log("Team is coming together!");
+        writeHTML();
       }
     });
 }
 
-
-function importCard(role) {
-  // role comes from nextTeamMember ();
-  switch (role.getRole()) {
-    case "Engineer":
-      return; //ADD CARD STYLE
-    case "Intern":
-      return; //ADD CARD STYLE
-  }
-}
-
-// function to check if any employee cards need to be creates, and if so, passes the employee from the employeesArray to the createEmployeeCard function, which will create the html for the card, and then that text is returned and added to the overall text for return to the createInfoCards function
-
-// CHECK
-function checkForEmployees() {
-  if (employeesArray.length > 1) {
-    // creates the employeeCards variable which will hold the collective text of all employee info cards
-    let employeeCards = createEmployeeCard(employeesArray[1]);
-    for (let i = 2; i < employeesArray.length; i++) {
-      employeeCards += createEmployeeCard(employeesArray[i]);
-    }
-    return employeeCards;
-  } else {
-    return '';
-  }
-}
-
-
-// GENERATING EMPLOYEE CARDS 
+// TODO: CREATE MPLOYEE CARDS FOR ENGINEER AND INTERN
 function createEmplCard(employee) {
   switch (employee.getRole()) {
     case "Intern":
@@ -172,7 +143,7 @@ function createEmplCard(employee) {
         <div class="card-text m-2 role-names">Intern
         <li class="list-group-item">${employee.id}</li>
         <li class="list-group-item">
-          Email: <a href="mailto:${employee.emailAddress}> ${employee.emailAddress}</a>
+          Email: <a href="mailto:${employee.email}> ${employee.email}</a>
         </li>
         <li class="list-group-item">School: ${employee.school}</li>
       </ul>
@@ -189,7 +160,7 @@ function createEmplCard(employee) {
     <ul class="list-group list-group-flush">
       <li class="list-group-item">${employee.id}</li>
       <li class="list-group-item">
-      Email: <a href="mailto:${employee.emailAddress}> ${employee.emailAddress}</a>
+      Email: <a href="mailto:${employee.email}> ${employee.email}</a>
     </li>
       <li class="list-group-item">
         GitHub: <a href="https://github.com/${employee.gitHub}">${employee.gitHub}</a>
@@ -197,8 +168,45 @@ function createEmplCard(employee) {
     </ul>
   </div>`;
 
+// TODO: CHECK TO SEE IF NEW EMPLOYEE CARD NEEDS TO BE CREATED BASED ON USER'S INPUT
+  function employeeCheck() {
+    if (team.length > 1) {
+      // this variable holds all the text info for all employee cards
+      let emplCard = generateEmplCard(team[1]);
+        for (let i = 2; i < team.length; i++) {
+          emplCard += generateEmplCard(team[i]);
+          }
+          return emplCard;
+        } else {
+          return '';
+        }
+      }
 
-      return `<!DOCTYPE html>
+// TODO: CREATES MANAGER INFO CARD
+  function managerInfoCard() {
+          return `
+  <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
+          <div class="text-white" style="background-color: #34a853;">
+              <h5 class="card-title m-2">${team[0].name}</h5>
+              <ion-icon name="cafe-outline" class="icon"></ion-icon>
+              <h5 class="card-text m-2">Manager</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+              <li class="list-group-item">ID: ${team[0].id}</li>
+              <li class="list-group-item"><a href="mailto: ${team[0].email}" target="_blank">Email: ${team[0].email}</a></li>
+              <li class="list-group-item">
+              Email: <a href="mailto: ${team[0].email}">${team[0].email}</a>
+            </li>
+              <li class="list-group-item">Office Number: ${team[0].officeNumber}</li>
+          </ul>
+  </div>
+      ${employeeCheck()}
+  `}
+
+// TODO: GENERATES HTML to then pass into the fs.WriteFile ()
+      function generateHTML() {
+        return `
+  <!DOCTYPE html>
   <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -212,45 +220,37 @@ function createEmplCard(employee) {
     <link rel="stylesheet" href="stylesheet.css" />
     <title>Team Profile Generator</title>
   </head>
-  
+
   <body>
-    <div class="jumbotron jumbotron-fluid">
+  <div class="jumbotron jumbotron-fluid p-3 text-white" style="background-color: #adff2f;">
       <div class="container">
-        <h1 class="title">My Team</h1>
-      </div>
+      <h1 class="display-5 text-center">My Team</h1>
     </div>
-
-    <div
-      class="card-group container-fluid d-flex justify-content-between cards-custom"
-    >
-      <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
-        <div class="card-header">
-          <h5 class="member-name">Catalina</h5>
-          <ion-icon name="cafe-outline" class="icon"></ion-icon>
-          <div class="card-text m-2 role-names">${manager.name}</div>
-        </div>
-        <ul class="list-group list-group-flush">
-        <li class="list-group-item">ID: ${manager.id}</li>
-        <li class="list-group-item">
-          Email: <a href="mailto:${manager.emailAddress}">${manager.emailAddress
-        }</a>
-        </li>
-        <li class="list-group-item">Office number: ${manager.officeNumber}</li>
-      </ul>
+  </div>
+  <div class="d-flex flex-wrap justify-content-around mt-3">
+        ${managerInfoCard()}
     </div>
-              ${createInfoCard()}
-              </div>
-      </div>
   </body>
-  </html>`;
-  }
+</html>`
+      }
 
-  const buildTeam = function () {
-    const newHTML = createHTML(team[0]);
-    fs.watch("./dist/index.html", newHTML, (error) =>
-      error
-        ? console.error(error)
-        : console.log("Creating HTML file in dist folder")
-    );
-  };
-  addManager();
+// TODO: WRITE HTML FILE
+    function writeHTML() {
+        return fs.writeFile("./dist/index.html", generateHTML(), (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("Visit the html file in the dist folder to view how your team came together")
+          }
+        });
+      }
+
+// // This function is the initializer
+addManager(); 
+
+
+
+
+
+
+
