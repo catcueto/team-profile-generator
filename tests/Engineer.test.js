@@ -1,29 +1,76 @@
 const Engineer = require("../lib/Engineer");
 
+// testing Engineer class
 describe("Engineer", () => {
-  describe("Engineer Properties", () => {
-    it("This should return Engineer object containing GitHub username", () => {
-      const obj = new Engineer(
-        "Brooke",
-        30,
-        "brookerus@aol.com",
-        "brookiebookie"
+  describe("Employee Properties", () => {
+    it("This should create an engineer object with: 'name', 'id', 'email, and 'gitHub'", () => {
+      const engineer = new Engineer(
+        "Solange",
+        8,
+        "example@gmail.com",
+        "sollymolly"
       );
-      expect(obj.gitHhub).toEqual("brookiebookie");
+      expect(engineer).toEqual({
+        name: "Solange",
+        id: 8,
+        email: "example@gmail.com",
+        gitHub: "sollymolly",
+      });
     });
   });
 
-  describe("Engineer Method", () => {
-    it("This should return github username and role", () => {
-      const roleMethod = new Engineer(
-        "Kendrick",
-        27,
-        "kmatmc@gmail.com",
-        "kennayyy"
+  describe("getName", () => {
+    it("This should return employee's name", () => {
+      const engineer = new Engineer(
+        "Solange",
+        8,
+        "example@email.com",
+        "sollymolly"
       );
+      expect(engineer.getName()).toEqual("Solange");
+    });
+  });
 
-      expect(roleMethod.getGithub()).toEqual("FrankGitHub");
-      expect(roleMethod.getRole()).toEqual("Engineer");
+  describe("getID", () => {
+    it("This should return Engineer's id", () => {
+      const engineer = new Engineer(
+        "Solange",
+        8,
+        "example@email.com",
+        "sollymolly"
+      );
+      expect(engineer.getID()).toEqual(8);
+    });
+  });
+
+  describe("getEmail", () => {
+    it("This should return employee's email", () => {
+      const engineer = new Engineer(
+        "Solange",
+        8,
+        "example@email.com",
+        "sollymolly"
+      );
+      expect(engineer.getEmail()).toEqual("example@email.com");
+    });
+  });
+
+  describe("getGitHub", () => {
+    it("This should return employee's email", () => {
+      const engineer = new Engineer(
+        "Solange",
+        8,
+        "example@email.com",
+        "sollymolly"
+      );
+      expect(engineer.getGithub()).toEqual("sollymolly");
+    });
+  });
+
+  describe("getRole", () => {
+    it("This should return employee's role", () => {
+      const engineer = new Engineer("Solange", 8, "example@email.com");
+      expect(engineer.getRole()).toEqual("Engineer");
     });
   });
 });

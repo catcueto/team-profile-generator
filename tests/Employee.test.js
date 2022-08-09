@@ -13,28 +13,28 @@ describe("Employee", () => {
     });
   });
 
-  describe("emplName", () => {
+  describe("getName", () => {
     it("This should return employee's name", () => {
       const employee = new Employee("Solange", 8, "example@email.com");
-      expect(employee.emplName()).toEqual("Solange");
+      expect(employee.getName()).toEqual("Solange");
     });
   });
 
-  describe("emplID", () => {
+  describe("getID", () => {
     it("This should return employee's id", () => {
       const employee = new Employee("Solange", 8, "example@email.com");
-      expect(employee.emplID()).toEqual(8);
+      expect(employee.getID()).toEqual(8);
     });
   });
 
-  describe("emplEmail", () => {
+  describe("getEmail", () => {
     it("This should return employee's email", () => {
       const employee = new Employee("Solange", 8, "example@email.com");
-      expect(employee.emplEmail()).toEqual("example@email.com");
+      expect(employee.getEmail()).toEqual("example@email.com");
     });
   });
 
-  describe("employeeRole", () => {
+  describe("getRole", () => {
     it("This should return employee's role", () => {
       const employee = new Employee("Solange", 8, "example@email.com");
       expect(employee.getRole()).toEqual("Employee");
