@@ -1,5 +1,5 @@
 const fs = require("fs");
-const path = require('path');
+const path = require("path");
 const inquirer = require("inquirer");
 
 // lib for classes
@@ -33,7 +33,7 @@ function addManager() {
       {
         type: "input",
         message: "What is the team manager's email?",
-        name: "email,
+        name: "email",
       },
       {
         type: "input",
@@ -80,132 +80,133 @@ function addEmployee() {
         name: "name",
         message: "What is the employee's name?",
         // when method checks for previous input; will run if user choses to add another employee
-        when: (role) => role.addAnother !== "No additional employees. My team is complete"
+        when: (role) =>
+          role.addAnother !== "No additional employees. My team is complete",
       },
 
       {
         type: "input",
         name: "id",
         message: "What's the employee ID number?",
-        when: (role) => role.addAnother !== "No additional employees. My team is complete"
+        when: (role) =>
+          role.addAnother !== "No additional employees. My team is complete",
       },
       {
         type: "input",
         name: "email",
         message: "Please enter the email address for this employee:",
-        when: (role) => role.addAnother !== "No additional employees. My team is complete"
+        when: (role) =>
+          role.addAnother !== "No additional employees. My team is complete",
       },
       {
         type: "input",
         name: "school",
         message: "What school is your intern's attending?",
         // this will only run when user is adding an intern
-        when: (role) => role.addAnother === "Add Intern"
+        when: (role) => role.addAnother === "Intern",
       },
       {
         type: "input",
         name: "gitHub",
         message: "What is your engineer's GitHub username?",
         // this will only run when user is adding an engineer
-        when: (role) => role.addAnother === "Add Engineer"
-      }
-    ]).then(employeeDeets => {
+        when: (role) => role.addAnother === "Engineer",
+      },
+    ])
+    .then((employeeDeets) => {
+      console.log(employeeDeets);
       // if the user wants to add an Intern to its team
-      if (employeeDeets.addAnother === "Add Intern") {
-        const intern = new Intern(employeeDeets.name, employeeDeets.id, employeeDeets.email, employeeDeets.school);
+      if (employeeDeets.role === "Intern") {
+        const intern = new Intern(
+          employeeDeets.name,
+          employeeDeets.id,
+          employeeDeets.email,
+          employeeDeets.school
+        );
         // adding intern info to the end of the array
         team.push(intern);
-        addEmployee();
+        console.log(intern);
+        // createEmplCard(intern);
       }
       // if the user wants to add an Engineer to its team
-      else if (employeeDeets.addAnother === "Add Engineer") {
-        const engineer = new Engineer(employeeDeets.name, employeeDeets.id, employeeDeets.email, employeeDeets.gitHub);
+      else if (employeeDeets.role === "Engineer") {
+        const engineer = new Engineer(
+          employeeDeets.name,
+          employeeDeets.id,
+          employeeDeets.email,
+          employeeDeets.gitHub
+        );
         team.push(engineer);
-        addEmployee();
+        console.log(engineer);
+        // createEmplCard(engineer);
       }
       // when the user is done adding employees, run the writeHTMl()
-      else {
-        // console.log("Team is coming together!");
-        writeHTML();
-      }
+
+      // console.log("Team is coming together!");
+      writeHTML();
     });
 }
 
 // TODO: CREATE MPLOYEE CARDS FOR ENGINEER AND INTERN
 function createEmplCard(employee) {
   switch (employee.getRole()) {
+    case "Manager":
+      return `
+        <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
+      <div class="text-white" style="background-color: #34a853;">
+          <h5 class="card-title m-2">${employee.name}</h5>
+          <ion-icon name="cafe-outline" class="icon"></ion-icon>
+          <h5 class="card-text m-2">Manager</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">ID: ${employee.id}</li>
+          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
+          <li class="list-group-item">Office Number: ${employee.officeNumber}</li>
+      </ul>
+</div>`;
+
     case "Intern":
       return `
       <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
-      <div class="card-header">
-        <h5 class="member-name">${employee.name}</h5>
-        <ion-icon name="cafe-outline" class="icon"></ion-icon>
-        <div class="card-text m-2 role-names">Intern
-        <li class="list-group-item">${employee.id}</li>
-        <li class="list-group-item">
-          Email: <a href="mailto:${employee.email}> ${employee.email}</a>
+      <div class="text-white" style="background-color: #34a853;">
+          <h5 class="card-title m-2">${employee.name}</h5>
+          <ion-icon name="cafe-outline" class="icon"></ion-icon>
+          <h5 class="card-text m-2">Manager</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">ID: ${employee.id}</li>
+          <li class="list-group-item">
+          Email: <a href="mailto: ${employee.email}">${employee.email}</a>
         </li>
-        <li class="list-group-item">School: ${employee.school}</li>
+          <li class="list-group-item">School: ${employee.school}</li>
       </ul>
-    </div>`;
+</div>`;
 
     case "Engineer":
       return `
-    <div class="card text-bg-info mb-3 card-unit" style="max-width: 18rem">
-    <div class="card-header">
-      <h5 class="member-name">${employee.name}</h5>
-      <ion-icon name="glasses-outline" class="icon"></ion-icon>
-      <div class="card-text m-2 role-names">Engineer</div>
-    </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">${employee.id}</li>
-      <li class="list-group-item">
-      Email: <a href="mailto:${employee.email}> ${employee.email}</a>
-    </li>
-      <li class="list-group-item">
+      <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
+      <div class="text-white" style="background-color: #34a853;">
+          <h5 class="card-title m-2">${employee.name}</h5>
+          <ion-icon name="cafe-outline" class="icon"></ion-icon>
+          <h5 class="card-text m-2">Manager</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">ID: ${employee.id}</li>
+          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
+          <li class="list-group-item">
+          Email: <a href="mailto: ${employee.email}">${employee.email}</a>
+        </li>
+        <li class="list-group-item">
         GitHub: <a href="https://github.com/${employee.gitHub}">${employee.gitHub}</a>
       </li>
-    </ul>
-  </div>`;
-
-// TODO: CHECK TO SEE IF NEW EMPLOYEE CARD NEEDS TO BE CREATED BASED ON USER'S INPUT
-  function employeeCheck() {
-    if (team.length > 1) {
-      // this variable holds all the text info for all employee cards
-      let emplCard = generateEmplCard(team[1]);
-        for (let i = 2; i < team.length; i++) {
-          emplCard += generateEmplCard(team[i]);
-          }
-          return emplCard;
-        } else {
-          return '';
-        }
-      }
-
-// TODO: CREATES MANAGER INFO CARD
-  function managerInfoCard() {
-          return `
-  <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
-          <div class="text-white" style="background-color: #34a853;">
-              <h5 class="card-title m-2">${team[0].name}</h5>
-              <ion-icon name="cafe-outline" class="icon"></ion-icon>
-              <h5 class="card-text m-2">Manager</h5>
-          </div>
-          <ul class="list-group list-group-flush">
-              <li class="list-group-item">ID: ${team[0].id}</li>
-              <li class="list-group-item"><a href="mailto: ${team[0].email}" target="_blank">Email: ${team[0].email}</a></li>
-              <li class="list-group-item">
-              Email: <a href="mailto: ${team[0].email}">${team[0].email}</a>
-            </li>
-              <li class="list-group-item">Office Number: ${team[0].officeNumber}</li>
-          </ul>
-  </div>
-      ${employeeCheck()}
-  `}
+      </ul>
+</div>`;
+  }
+}
 
 // TODO: GENERATES HTML to then pass into the fs.WriteFile ()
-      function generateHTML() {
-        return `
+function generateHTML() {
+  return `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -228,29 +229,25 @@ function createEmplCard(employee) {
     </div>
   </div>
   <div class="d-flex flex-wrap justify-content-around mt-3">
-        ${managerInfoCard()}
+        ${team.map((employee) => createEmplCard(employee))}
     </div>
   </body>
-</html>`
-      }
+</html>`;
+}
 
 // TODO: WRITE HTML FILE
-    function writeHTML() {
-        return fs.writeFile("./dist/index.html", generateHTML(), (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("Visit the html file in the dist folder to view how your team came together")
-          }
-        });
-      }
+function writeHTML() {
+  console.log(team);
+  return fs.writeFile("./dist/index.html", generateHTML(), (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(
+        "Visit the html file in the dist folder to view how your team came together"
+      );
+    }
+  });
+}
 
-// // This function is the initializer
-addManager(); 
-
-
-
-
-
-
-
+// This function is the initializer
+addManager();

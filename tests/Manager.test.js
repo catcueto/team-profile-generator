@@ -37,7 +37,7 @@ describe("Manager", () => {
 
   describe("getOfficeNumber", () => {
     it("This should return manager's office number", () => {
-      const manager = new Manager("Solange", 8, "example@email.com", 10);
+      const manager = new Manager("Solange", 8, "example@email.com", 105);
       expect(manager.getOfficeNumber()).toEqual(105);
     });
   });
