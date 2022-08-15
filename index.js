@@ -8,142 +8,125 @@ const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 const team = []; //empty array so we can later add team members
 
-// TODO: ADDING MANAGER + INPUT VALUES
-function addManager() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "Hiya! Please enter the name of the manager:",
-        name: "name",
-      },
-      {
-        type: "input",
-        message: "What is the team manager's id? ",
-        name: "id",
-        default: "7",
-        validate: (input) => {
-          // if user does not type a number
-          if (isNaN(input)) {
-            return "Please include only numeric values.";
-          }
-          return true;
-        },
-      },
-      {
-        type: "input",
-        message: "What is the team manager's email?",
-        name: "email",
-      },
-      {
-        type: "input",
-        message: "What is the team manager's office number?",
-        name: "officeNumber",
-        validate: (input) => {
-          if (isNaN(input)) {
-            return "Please include only numeric values.";
-          }
-          return true;
-        },
-      },
-    ])
-    .then((response) => {
-      // adding user's responses to the Manager class
-      const manager = new Manager(
-        response.name,
-        response.id,
-        response.email,
-        response.officeNumber
-      );
-      // sending manager to the beginning of the team array (initially empty)
-      team.unshift(manager);
-      addEmployee();
-    });
-}
-
-// TODO: PROMPT THE USER WITH TEAM ROLES
-function addEmployee() {
-  inquirer
-    .prompt([
-      {
-        type: "list",
-        message: "Which type of team member would you like to add?",
-        name: "role",
-        choices: [
-          "Engineer",
-          "Intern",
-          "No additional employees. My team is complete",
-        ],
-      },
-      {
-        type: "input",
-        name: "name",
-        message: "What is the employee's name?",
-        // when method checks for previous input; will run if user choses to add another employee
-        when: (role) =>
-          role.addAnother !== "No additional employees. My team is complete",
-      },
-
-      {
-        type: "input",
-        name: "id",
-        message: "What's the employee ID number?",
-        when: (role) =>
-          role.addAnother !== "No additional employees. My team is complete",
-      },
-      {
-        type: "input",
-        name: "email",
-        message: "Please enter the email address for this employee:",
-        when: (role) =>
-          role.addAnother !== "No additional employees. My team is complete",
-      },
-      {
-        type: "input",
-        name: "school",
-        message: "What school is your intern's attending?",
-        // this will only run when user is adding an intern
-        when: (role) => role.addAnother === "Intern",
-      },
-      {
-        type: "input",
-        name: "gitHub",
-        message: "What is your engineer's GitHub username?",
-        // this will only run when user is adding an engineer
-        when: (role) => role.addAnother === "Engineer",
-      },
-    ])
-    .then((employeeDeets) => {
-      console.log(employeeDeets);
-      // if the user wants to add an Intern to its team
-      if (employeeDeets.role === "Intern") {
-        const intern = new Intern(
-          employeeDeets.name,
-          employeeDeets.id,
-          employeeDeets.email,
-          employeeDeets.school
-        );
-        // adding intern info to the end of the array
-        team.push(intern);
-        console.log(intern);
-        // createEmplCard(intern);
+// ADDING MANAGER PROMPTS
+const addManager = [
+  {
+    type: "input",
+    message: "Hiya! Please enter the name of the manager:",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the team manager's id? ",
+    name: "id",
+    default: "7",
+    validate: (input) => {
+      // if user does not type a number
+      if (isNaN(input)) {
+        return "Please include only numeric values.";
       }
-      // if the user wants to add an Engineer to its team
-      else if (employeeDeets.role === "Engineer") {
-        const engineer = new Engineer(
-          employeeDeets.name,
-          employeeDeets.id,
-          employeeDeets.email,
-          employeeDeets.gitHub
-        );
-        team.push(engineer);
-        console.log(engineer);
-        // createEmplCard(engineer);
+      return true;
+    },
+  },
+  {
+    type: "input",
+    message: "What is the team manager's email?",
+    name: "email",
+  },
+  {
+    type: "input",
+    message: "What is the team manager's office number?",
+    name: "officeNumber",
+    validate: (input) => {
+      if (isNaN(input)) {
+        return "Please include only numeric values.";
       }
-      // when the user is done adding employees, run the writeHTMl()
+      return true;
+    },
+  },
+  {
+    type: "list",
+    message: "Would you like to add another employee?",
+    choices: ["YES", "NO"],
+    name: "addEmployee",
+  },
+];
 
-      // console.log("Team is coming together!");
-      writeHTML();
+// ADDING ENGINEER
+const addEngineer = [
+  {
+    type: "input",
+    message: "What is the engineer's name?",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the engineer's employee ID number?",
+    name: "id",
+  },
+  {
+    type: "input",
+    message: "What is the engineer's email?",
+    name: "email",
+  },
+  {
+    type: "input",
+    message: "What is the engineer's github username?",
+    name: "gitHub",
+  },
+  {
+    type: "list",
+    message: "Would you like to add another employee?",
+    choices: ["YES", "No, my team is complete"],
+    name: "addEmployee",
+  },
+];
+
+const addIntern = [
+  {
+    type: "input",
+    message: "What is the intern's name?",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the intern's employee ID number?",
+    name: "id",
+  },
+  {
+    type: "input",
+    message: "What is the intern's email?",
+    name: "email",
+  },
+  {
+    type: "input",
+    message: "What school does the intern attend??",
+    name: "school",
+  },
+  {
+    type: "list",
+    message: "Would you like to add another employee?",
+    choices: ["YES", "No, my team is complete"],
+    name: "addEmployee",
+  },
+];
+
+function selectEmployee() {
+  // ask which type of employee should be added
+  inquirer
+    .prompt({
+      type: "list",
+      message: "What role does the selected employee have?",
+      choices: ["Engineer", "Intern"],
+      name: "role",
+    })
+    .then((answer) => {
+      // use the answer to determine which set of questions should be asked next
+      if (answer.role === "Engineer") {
+        renderEngineer();
+      } else {
+        renderIntern();
+      }
     });
 }
 
@@ -175,9 +158,7 @@ function createEmplCard(employee) {
       </div>
       <ul class="list-group list-group-flush">
           <li class="list-group-item">ID: ${employee.id}</li>
-          <li class="list-group-item">
-          Email: <a href="mailto: ${employee.email}">${employee.email}</a>
-        </li>
+          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
           <li class="list-group-item">School: ${employee.school}</li>
       </ul>
 </div>`;
@@ -193,9 +174,6 @@ function createEmplCard(employee) {
       <ul class="list-group list-group-flush">
           <li class="list-group-item">ID: ${employee.id}</li>
           <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
-          <li class="list-group-item">
-          Email: <a href="mailto: ${employee.email}">${employee.email}</a>
-        </li>
         <li class="list-group-item">
         GitHub: <a href="https://github.com/${employee.gitHub}">${employee.gitHub}</a>
       </li>
@@ -231,6 +209,8 @@ function generateHTML() {
   <div class="d-flex flex-wrap justify-content-around mt-3">
         ${team.map((employee) => createEmplCard(employee))}
     </div>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   </body>
 </html>`;
 }
