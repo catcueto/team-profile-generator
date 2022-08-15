@@ -1,18 +1,38 @@
-# team-profile-generator
+# Team Profile Generator
 
-Object-Oriented Programming
+Used Node.js to build a command-line application that generates an HTML webpage containing all of the employees of a a particular team. User has three options for employee roles, including manager, engineer, and intern. Besides adding their name, employee id number, and email address, managers can also add their office number to their employee cards while engineers and interns can add their github username and school respectively.
 
-```md
-.
-├── **tests**/ //jest tests
-│ ├── Employee.test.js
-│ ├── Engineer.test.js
-│ ├── Intern.test.js
-│ └── Manager.test.js
-├── dist/ // rendered output (HTML) and CSS style sheet  
-├── lib/ // classes
-├── src/ // template helper code
-├── .gitignore // indicates which folders and files Git should ignore
-├── index.js // runs the application
-└── package.json
+Description
+Dynamically generate an HTML document based on user input
+
+## Table of Contents
+
+- [Installation](#installation)
+
+- [Usage](#usage)
+
+- [Tests](#tests)
+
+- [Contact](#contact)
+
+## Installation
+
+To install dependencies, run this command:
+
 ```
+npm i
+```
+
+## Usage
+
+Run the command `node index.js` in the integrated terminal to run this app
+
+## Tests
+
+To perform tests, run this command:
+
+`npm run test `
+
+## Contact
+
+If you want to get in touch or if you any questions about this repository, please contact me directly at catacueto@gmail.com. You can find more of my work at https://github.com/catcueto.
