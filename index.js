@@ -82,6 +82,7 @@ const addEngineer = [
   },
 ];
 
+// ADDING INTERN
 const addIntern = [
   {
     type: "input",
@@ -111,6 +112,7 @@ const addIntern = [
   },
 ];
 
+// FUNCTION for the user to pick what employee is being added
 function selectEmployee() {
   // ask which type of employee should be added
   inquirer
@@ -130,61 +132,57 @@ function selectEmployee() {
     });
 }
 
-// TODO: CREATE MPLOYEE CARDS FOR ENGINEER AND INTERN
-function createEmplCard(employee) {
-  switch (employee.getRole()) {
-    case "Manager":
-      return `
-        <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
-      <div class="text-white" style="background-color: #34a853;">
-          <h5 class="card-title m-2">${employee.name}</h5>
-          <ion-icon name="cafe-outline" class="icon"></ion-icon>
-          <h5 class="card-text m-2">Manager</h5>
-      </div>
-      <ul class="list-group list-group-flush">
-          <li class="list-group-item">ID: ${employee.id}</li>
-          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
-          <li class="list-group-item">Office Number: ${employee.officeNumber}</li>
-      </ul>
-</div>`;
-
-    case "Intern":
-      return `
-      <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
-      <div class="text-white" style="background-color: #34a853;">
-          <h5 class="card-title m-2">${employee.name}</h5>
-          <ion-icon name="cafe-outline" class="icon"></ion-icon>
-          <h5 class="card-text m-2">Manager</h5>
-      </div>
-      <ul class="list-group list-group-flush">
-          <li class="list-group-item">ID: ${employee.id}</li>
-          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
-          <li class="list-group-item">School: ${employee.school}</li>
-      </ul>
-</div>`;
-
-    case "Engineer":
-      return `
-      <div class="card text-bg-info mb-3 card-unit" style="max-width: 20rem">
-      <div class="text-white" style="background-color: #34a853;">
-          <h5 class="card-title m-2">${employee.name}</h5>
-          <ion-icon name="cafe-outline" class="icon"></ion-icon>
-          <h5 class="card-text m-2">Manager</h5>
-      </div>
-      <ul class="list-group list-group-flush">
-          <li class="list-group-item">ID: ${employee.id}</li>
-          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
-        <li class="list-group-item">
-        GitHub: <a href="https://github.com/${employee.gitHub}">${employee.gitHub}</a>
-      </li>
-      </ul>
-</div>`;
-  }
+// ADDING ENGINEER TO EMPLOYEE LIST
+function renderEngineer() {
+  inquirer.prompt(addEngineer).then((answer) => {
+    // we push to add engineer to the team
+    team.push(
+      new Engineer(answer.name, answer.id, answer.email, answer.gitHub)
+    );
+    // if user wants to add more employees
+    if (answer.addEmployee === "Yes") {
+      // then select employee role
+      selectEmployee();
+    } else {
+      // if done, write the file
+      writeToFile();
+    }
+  });
 }
 
-// TODO: GENERATES HTML to then pass into the fs.WriteFile ()
-function generateHTML() {
-  return `
+// ADDING INTERN TO EMPLOYEE LIST
+function renderIntern() {
+  inquirer.prompt(addIntern).then((answer) => {
+    // we push to add engineer to the team
+    team.push(new Intern(answer.name, answer.id, answer.email, answer.school));
+    // if user wants to add more employees
+    if (answer.addEmployee === "Yes") {
+      // then select employee role
+      selectEmployee();
+    } else {
+      // if done, write the file
+      writeToFile();
+    }
+  });
+}
+
+// FUNCTION TO WRITE HTML FILE
+function writeToFile() {
+  let htmlData = generateHTML();
+  fs.writeFile("./dist/index.html", htmlData, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(
+        "Go to the dist folder to see how your team came together in the index.html file"
+      );
+    }
+  });
+
+
+  // TODO: GENERATES HTML to then pass into the fs.WriteFile ()
+  function generateHTML() {
+    let pageContent = `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -206,28 +204,89 @@ function generateHTML() {
       <h1 class="display-5 text-center">My Team</h1>
     </div>
   </div>
-  <div class="d-flex flex-wrap justify-content-around mt-3">
-        ${team.map((employee) => createEmplCard(employee))}
-    </div>
+  <section class="d-flex flex-wrap justify-content-around mt-3">`
+    // **************************************************************************************
+    // Create logic to generate employee cards
+    pageContent += createEmployee(team[0]);
+    team.forEach(employee => {
+      if (employee.getRole() === "Engineer") pageContent += createEmployee(employee);
+    });
+    team.forEach(employee => {
+      if (employee.getRole() === "Intern") pageContent += createEmployee(employee);
+    })
+    // **************************************************************************************
+    pageContent += `
+    </section>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  </body>
-</html>`;
-}
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+      </body>
+    </html>`;
+  }
+  `
 
-// TODO: WRITE HTML FILE
-function writeHTML() {
-  console.log(team);
-  return fs.writeFile("./dist/index.html", generateHTML(), (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(
-        "Visit the html file in the dist folder to view how your team came together"
-      );
+    
+
+
+
+
+
+
+
+
+
+
+  // CREATING EMPLOYYEE CARDS IN HTML FILE
+  function createEmplCard(employee) {
+    switch (employee.getRole()) {
+      case "Manager":
+        return `
+    < div class="card text-bg-info mb-3 card-unit" style = "max-width: 20rem" >
+      <div class="text-white" style="background-color: #34a853;">
+          <h5 class="card-title m-2">${employee.name}</h5>
+          <ion-icon name="cafe-outline" class="icon"></ion-icon>
+          <h5 class="card-text m-2">Manager</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">ID: ${employee.id}</li>
+          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
+          <li class="list-group-item">Office Number: ${employee.officeNumber}</li>
+      </ul>
+</ > `;
+
+      case "Intern":
+        return `
+    < div class="card text-bg-info mb-3 card-unit" style = "max-width: 20rem" >
+      <div class="text-white" style="background-color: #34a853;">
+          <h5 class="card-title m-2">${employee.name}</h5>
+          <ion-icon name="cafe-outline" class="icon"></ion-icon>
+          <h5 class="card-text m-2">Manager</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">ID: ${employee.id}</li>
+          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
+          <li class="list-group-item">School: ${employee.school}</li>
+      </ul>
+</ > `;
+
+      case "Engineer":
+        return `
+    < div class="card text-bg-info mb-3 card-unit" style = "max-width: 20rem" >
+      <div class="text-white" style="background-color: #34a853;">
+          <h5 class="card-title m-2">${employee.name}</h5>
+          <ion-icon name="cafe-outline" class="icon"></ion-icon>
+          <h5 class="card-text m-2">Manager</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+          <li class="list-group-item">ID: ${employee.id}</li>
+          <li class="list-group-item"><a href="mailto: ${employee.email}" target="_blank">Email: ${employee.email}</a></li>
+        <li class="list-group-item">
+        GitHub: <a href="https://github.com/${employee.gitHub}">${employee.gitHub}</a>
+      </li>
+      </ul>
+</ > `;
     }
-  });
-}
+  }
 
-// This function is the initializer
-addManager();
+
+  // This function is the initializer
+  addManager();
