@@ -4,6 +4,8 @@ Used Node.js to build a command-line application that generates an HTML webpage 
 
 ## Table of Contents
 
+- [App's Appearance](#appearance)
+
 - [Installation](#installation)
 
 - [Usage](#usage)
@@ -13,6 +15,10 @@ Used Node.js to build a command-line application that generates an HTML webpage 
 - [Demo Video](#demo)
 
 - [Contact](#contact)
+
+## Appearance
+
+![alt text](./imgs/html-generated-screenshot.PNG)
 
 ## Installation
 
